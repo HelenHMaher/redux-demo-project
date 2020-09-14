@@ -7,6 +7,14 @@ const initialState = {
   error: null,
 }
 
+export const addNewPost = createAsyncThunk(
+  'posts/addNewPost',
+  async (initialPost) => {
+    const response = await client.post('/fakeApi/posts', { post: initialPost })
+    return response.post
+  }
+)
+
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
   const response = await client.get('/fakeApi/posts')
   return response.posts
@@ -22,22 +30,6 @@ const postsSlice = createSlice({
       if (existingPost) {
         existingPost.reactions[reaction]++
       }
-    },
-    postAdded: {
-      reducer(state, action) {
-        state.posts.push(action.payload)
-      },
-      prepare(title, content, userId) {
-        return {
-          payload: {
-            id: nanoid(),
-            date: new Date().toISOString(),
-            title,
-            content,
-            user: userId,
-          },
-        }
-      },
     },
     postUpdated(state, action) {
       const { id, title, content } = action.payload
@@ -58,6 +50,9 @@ const postsSlice = createSlice({
       [fetchPosts.rejected]: (state, action) => {
         state.status = 'failed'
         state.error = action.error.message
+      },
+      [addNewPost.fulfilled]: (state, action) => {
+        state.posts.push(action.payload)
       },
     },
   },
