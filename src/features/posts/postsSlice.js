@@ -1,4 +1,4 @@
-import { createSlice, nanoid, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { client } from '../../api/client'
 
 const initialState = {
@@ -39,21 +39,21 @@ const postsSlice = createSlice({
         existingPost.content = content
       }
     },
-    extraReducers: {
-      [fetchPosts.pending]: (state, action) => {
-        state.status = 'loading'
-      },
-      [fetchPosts.fulfilled]: (state, action) => {
-        state.status = 'succeeded'
-        state.posts = state.posts.concat(action.payload)
-      },
-      [fetchPosts.rejected]: (state, action) => {
-        state.status = 'failed'
-        state.error = action.error.message
-      },
-      [addNewPost.fulfilled]: (state, action) => {
-        state.posts.push(action.payload)
-      },
+  },
+  extraReducers: {
+    [fetchPosts.pending]: (state, action) => {
+      state.status = 'loading'
+    },
+    [fetchPosts.fulfilled]: (state, action) => {
+      state.status = 'succeeded'
+      state.posts = state.posts.concat(action.payload)
+    },
+    [fetchPosts.rejected]: (state, action) => {
+      state.status = 'failed'
+      state.error = action.error.message
+    },
+    [addNewPost.fulfilled]: (state, action) => {
+      state.posts.push(action.payload)
     },
   },
 })
